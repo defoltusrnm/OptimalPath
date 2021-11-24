@@ -62,7 +62,7 @@ namespace OptimalPath.Services
 
         private TNode Min()
         {
-            var arr = Graph.Nodes.Where(x => x.IsVisited == false).ToArray();
+            var arr = Graph.Where(x => x.IsVisited == false).ToArray();
 
             if (arr.Length == 0)
                 return default;

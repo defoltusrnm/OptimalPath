@@ -7,15 +7,6 @@ namespace OptimalPath.Models
 {
     internal class Graph : IGraph<Node, Edge>
     {
-        private int _count = 0;
-
-        private int _visitedCount = 0;
-        
-        public bool IsAllVisited => _visitedCount == _count;
-
-        public IEnumerable<Edge> Edges { get; private set; }
-            = Enumerable.Empty<Edge>();
-
         public IEnumerable<Node> Nodes { get; private set; }
             = Enumerable.Empty<Node>();
 
@@ -28,32 +19,31 @@ namespace OptimalPath.Models
                 Weigth = weigth
             };
 
-            Edge edgeRigth = new()
-            {
-                Input = nodeB,
-                Output = nodeA,
-                Weigth = weigth
-            };
+            Edge edgeRigth = InvertEdge(edgeLeft);
 
             nodeA.Edges = nodeA.Edges.Append(edgeLeft);
             nodeB.Edges = nodeB.Edges.Append(edgeRigth);
 
-            bool isExistsA = Nodes.Contains(nodeA);
-            bool isExistsB = Nodes.Contains(nodeB);
-
-            Nodes = !isExistsA ? Nodes.Append(nodeA) : Nodes;
-            Nodes = !isExistsB ? Nodes.Append(nodeB) : Nodes;
-
-            Edges = Edges.Append(edgeLeft);
-
-            _count += !isExistsA ? 1 : 0;
-            _count += !isExistsB ? 1 : 0;
+            TryAdd(nodeA);
+            TryAdd(nodeB);
         }
 
-        public IEnumerator<Edge> GetEnumerator()
-            => Edges.GetEnumerator();
+        public IEnumerator<Node> GetEnumerator()
+            => Nodes.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()
             => GetEnumerator();
+
+        private Edge InvertEdge(Edge edge)
+            => new Edge()
+            {
+                Input = edge.Output,
+                Output = edge.Input,
+                Weigth = edge.Weigth
+            };
+
+        private void TryAdd(Node node)
+            => Nodes = !Nodes.Contains(node) ? Nodes.Append(node) : Nodes;
+
     }
 }
