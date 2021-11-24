@@ -20,7 +20,7 @@ namespace OptimalPath.Services
 
             stopwatch.Stop();
 
-            Console.WriteLine($"alg time: {stopwatch.ElapsedMilliseconds} ms");
+            Console.WriteLine($"alg time: {stopwatch.ElapsedMilliseconds} ms ; {stopwatch.Elapsed.TotalMilliseconds} ms; {stopwatch.ElapsedTicks}");
 
             return route;
         }

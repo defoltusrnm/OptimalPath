@@ -9,78 +9,69 @@ namespace OptimalPath.Services
         where TEdge : class, IEdge<TNode>
     {
 
-        private TNode _minNode;
-
-        private int _sum = 0;
-
-        private IEnumerable<TNode> _nodes
-            = Enumerable.Empty<TNode>();
-        
         public IGraph<TNode, TEdge> Graph { private get; init; }
 
         public IRoute<TNode, TEdge> ComputePath(TNode start, TNode end)
         {
-            _minNode = start;
-
-            _minNode.Sum = 0;
-
-            while (Graph.Nodes.Any(x => !x.IsVisited))
+            start.Sum = 0;
+            while (true)
             {
                 var current = Min();
+
+                if (current == default)
+                    break;
 
                 Recalculate(current);
             }
 
-            Route<TNode, TEdge> route = new()
+            return new Route<TNode, TEdge>()
             {
                 Origin = start,
                 Destination = end,
                 Edges = ConstructPath(start, end)
             };
-
-            return route;
         }
 
         private IEnumerable<TEdge> ConstructPath(TNode start, TNode end)
         {
-            _sum = end.Sum;
-            
             TNode current = end;
             while (start != current)
             {
-                current = FindMinSum(current, out TEdge minEdge);
-                yield return minEdge;
+                TEdge edge = FindMinSum(current);
+                current = edge.Output;
+                yield return edge;
             }
         }
 
-        private TNode FindMinSum(TNode node, out TEdge minEdge)
+        private TEdge FindMinSum(TNode node)
         {
             var arr = node.ToArray();
 
-            TNode min = default;
-            minEdge = default;
-            int sum = int.MaxValue;
+            TEdge minEdge = arr[0];
+            int sum = minEdge.Weigth + minEdge.Output.Sum;
 
-            foreach (TEdge edge in arr)
-                if (sum > edge.Output.Sum + edge.Weigth)
+            for (int i = 1; i < arr.Length; i++)
+                if (sum > arr[i].Output.Sum + arr[i].Weigth)
                 {
-                    sum = edge.Output.Sum + edge.Weigth;
-                    min = edge.Output;
-                    minEdge = edge;
+                    sum = arr[i].Output.Sum + arr[i].Weigth;
+                    minEdge = arr[i];
                 }
 
-            return min;
+            return minEdge;
         }
 
         private TNode Min()
         {
             var arr = Graph.Nodes.Where(x => x.IsVisited == false).ToArray();
 
+            if (arr.Length == 0)
+                return default;
+            
             TNode min = arr[0];
 
-            foreach (var node in arr)
-                if (min.Sum > node.Sum)
-                    min = node;
+            for (int i = 1; i < arr.Length; i++)
+                if (min.Sum > arr[i].Sum)
+                    min = arr[i];
 
             return min;
         }
@@ -97,13 +88,7 @@ namespace OptimalPath.Services
                 {
                     edge.Output.Sum = sum;
                     edge.Output.IsVisited = false;
-                    _minNode = edge.Output;
-
-                    System.Console.WriteLine($"{node.Id} : {edge.Output.Id} : {edge.Output.Sum}");
                 }
-
-                if (edge.Output.Sum < _minNode.Sum)
-                    _minNode = edge.Output;
             }
         }
     }

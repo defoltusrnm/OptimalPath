@@ -6,7 +6,7 @@ namespace OptimalPath.Models
         where TEdge : class, IEdge<TNode>
         where TNode : class, INode<TEdge>
     {
-
+        
         IEnumerable<TEdge> Edges { get; }
 
         IEnumerable<TNode> Nodes { get; }

@@ -24,7 +24,7 @@ namespace OptimalPath.Models
         public int Count { get; set; }
 
         public bool IsVisited { get; set; }
-           = false;
+            = false;
 
         public IEnumerator<Edge> GetEnumerator()
             => Edges.GetEnumerator();
