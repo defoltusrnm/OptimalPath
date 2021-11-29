@@ -4,7 +4,7 @@ namespace OptimalPath.Models
 {
     internal interface IRoute<TNode, TEdge> : IEnumerable<TEdge>
         where TEdge : class, IEdge<TNode>
-        where TNode : class, INode<TEdge>
+        where TNode : class, INode
     {
         TNode Origin { get; init; }
 

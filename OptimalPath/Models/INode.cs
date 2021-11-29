@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace OptimalPath.Models
+﻿namespace OptimalPath.Models
 {
     internal interface INode
     {
@@ -10,11 +7,5 @@ namespace OptimalPath.Models
         int Sum { get; set; }
 
         bool IsVisited { get; set; }
-    }
-
-    internal interface INode<TEdge> : INode, IEnumerable<TEdge>
-        where TEdge : class, IEdge
-    {
-        IEnumerable<TEdge> Edges { get; set; }
     }
 }

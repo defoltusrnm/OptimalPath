@@ -5,7 +5,7 @@ using System.Linq;
 namespace OptimalPath.Services
 {
     internal class DijekstraAlg<TNode, TEdge> : IRoutingService<TNode, TEdge>
-        where TNode : class, INode<TEdge>
+        where TNode : class, INode
         where TEdge : class, IEdge<TNode>
     {
 
@@ -28,7 +28,7 @@ namespace OptimalPath.Services
             {
                 Origin = start,
                 Destination = end,
-                Edges = ConstructPath(start, end)
+                Edges = ConstructPath(start, end).Reverse()
             };
         }
 
@@ -38,22 +38,22 @@ namespace OptimalPath.Services
             while (start != current)
             {
                 TEdge edge = FindMinSum(current);
-                current = edge.Output;
+                current = edge.Input;
                 yield return edge;
             }
         }
 
         private TEdge FindMinSum(TNode node)
         {
-            var arr = node.ToArray();
+            var arr = Graph.Edges.Where(e => e.Output.Equals(node)).ToArray();
 
             TEdge minEdge = arr[0];
-            int sum = minEdge.Weigth + minEdge.Output.Sum;
+            int sum = minEdge.Weigth + minEdge.Input.Sum;
 
             for (int i = 1; i < arr.Length; i++)
-                if (sum > arr[i].Output.Sum + arr[i].Weigth)
+                if (sum > arr[i].Input.Sum + arr[i].Weigth)
                 {
-                    sum = arr[i].Output.Sum + arr[i].Weigth;
+                    sum = arr[i].Input.Sum + arr[i].Weigth;
                     minEdge = arr[i];
                 }
 
@@ -79,8 +79,10 @@ namespace OptimalPath.Services
         private void Recalculate(TNode node)
         {
             node.IsVisited = true;
+
+            var edges = Graph.Edges.Where(e => e.Input.Equals(node));
             
-            foreach (TEdge edge in node)
+            foreach (TEdge edge in edges)
             {
                 int sum = node.Sum + edge.Weigth;
 
@@ -88,6 +90,20 @@ namespace OptimalPath.Services
                 {
                     edge.Output.Sum = sum;
                     edge.Output.IsVisited = false;
+                    System.Console.WriteLine(sum);
+                }
+            }
+
+            edges = Graph.Edges.Where(e => e.Output.Equals(node));
+
+            foreach (TEdge edge in edges)
+            {
+                int sum = node.Sum + edge.Weigth;
+
+                if (edge.Input.Sum > sum)
+                {
+                    edge.Input.Sum = sum;
+                    edge.Input.IsVisited = false;
                     System.Console.WriteLine(sum);
                 }
             }

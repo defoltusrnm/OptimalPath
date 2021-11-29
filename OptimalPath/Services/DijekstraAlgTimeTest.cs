@@ -7,7 +7,7 @@ using System.Linq;
 namespace OptimalPath.Services
 {
     internal class DijekstraAlgTimeTest<TNode, TEdge> : IRouteDecorator<TNode, TEdge>
-        where TNode : class, INode<TEdge>
+        where TNode : class, INode
         where TEdge : class, IEdge<TNode>
     {
         public IRoutingService<TNode, TEdge> Service { get; init; }

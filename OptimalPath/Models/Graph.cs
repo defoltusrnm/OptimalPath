@@ -10,19 +10,19 @@ namespace OptimalPath.Models
         public IEnumerable<Node> Nodes { get; private set; }
             = Enumerable.Empty<Node>();
 
+        public IEnumerable<Edge> Edges { get; private set; }
+            = Enumerable.Empty<Edge>();
+
         public void AddEdge(Node nodeA, Node nodeB, int weigth)
         {
-            Edge edgeLeft = new()
+            Edge edge = new()
             {
                 Input = nodeA,
                 Output = nodeB,
                 Weigth = weigth
             };
 
-            Edge edgeRigth = InvertEdge(edgeLeft);
-
-            nodeA.Edges = nodeA.Edges.Append(edgeLeft);
-            nodeB.Edges = nodeB.Edges.Append(edgeRigth);
+            Edges = Edges.Append(edge);
 
             TryAdd(nodeA);
             TryAdd(nodeB);
@@ -33,14 +33,6 @@ namespace OptimalPath.Models
 
         IEnumerator IEnumerable.GetEnumerator()
             => GetEnumerator();
-
-        private Edge InvertEdge(Edge edge)
-            => new Edge()
-            {
-                Input = edge.Output,
-                Output = edge.Input,
-                Weigth = edge.Weigth
-            };
 
         private void TryAdd(Node node)
             => Nodes = !Nodes.Contains(node) ? Nodes.Append(node) : Nodes;

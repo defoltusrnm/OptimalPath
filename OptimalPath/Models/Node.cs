@@ -1,10 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace OptimalPath.Models
+﻿namespace OptimalPath.Models
 {
-    internal class Node : INode<Edge>
+    internal class Node : INode
     {
         private static int _globalId = 1;
 
@@ -12,9 +8,6 @@ namespace OptimalPath.Models
         {
             Id = _globalId++;
         }
-
-        public IEnumerable<Edge> Edges { get; set; }
-            = Enumerable.Empty<Edge>();
 
         public int Id { get; init; }
 
@@ -26,17 +19,9 @@ namespace OptimalPath.Models
         public bool IsVisited { get; set; }
             = false;
 
-        public IEnumerator<Edge> GetEnumerator()
-            => Edges.GetEnumerator();
-
         public override string ToString()
         {
             return $"{Id}";
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            throw new System.NotImplementedException();
         }
     }
 }
