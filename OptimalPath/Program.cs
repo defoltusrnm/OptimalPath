@@ -36,11 +36,6 @@ namespace OptimalPath
                 Graph = gr
             };
 
-            alg = new DijekstraAlgTimeTest<Node, Edge>
-            {
-                Service = alg
-            };
-
             Console.WriteLine(string.Join("; ", alg.ComputePath(a, g)));
         }
     }

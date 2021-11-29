@@ -88,6 +88,7 @@ namespace OptimalPath.Services
                 {
                     edge.Output.Sum = sum;
                     edge.Output.IsVisited = false;
+                    System.Console.WriteLine(sum);
                 }
             }
         }

@@ -1,6 +1,8 @@
 ﻿using OptimalPath.Models;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace OptimalPath.Services
 {
@@ -13,14 +15,31 @@ namespace OptimalPath.Services
         public IRoute<TNode, TEdge> ComputePath(TNode start, TNode end)
         {
             Stopwatch stopwatch = new();
+
+            List<double> times = new();
+
+            int n = 1000;
             
-            stopwatch.Start();
+            IRoute<TNode, TEdge> route = default;
+            
+            for (int i = 0; i < n; i++)
+            {
+                stopwatch.Start();
 
-            var route = Service.ComputePath(start, end);
+                route = Service.ComputePath(start, end);
 
-            stopwatch.Stop();
+                stopwatch.Stop();
 
-            Console.WriteLine($"alg time: {stopwatch.ElapsedMilliseconds} ms ; {stopwatch.Elapsed.TotalMilliseconds} ms; {stopwatch.ElapsedTicks}");
+                times.Add(stopwatch.Elapsed.TotalMilliseconds);
+            }
+
+            Console.WriteLine(string.Join("\n", times));
+
+            double average = times.Average();
+
+            double devotion = Math.Sqrt( times.Sum(x => Math.Pow(x - average, 2)) / times.Count() );
+
+            Console.WriteLine($"\taverage = {average,10:f4}\n\tdevotion = {devotion,10:f4}");
 
             return route;
         }
