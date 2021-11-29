@@ -37,13 +37,13 @@ namespace OptimalPath.Services
             TNode current = end;
             while (start != current)
             {
-                TEdge edge = FindMinSum(current);
-                current = edge.Input;
+                TEdge edge = FindMinSum(current, out TNode nextNode);
+                current = nextNode;
                 yield return edge;
             }
         }
 
-        private TEdge FindMinSum(TNode node)
+        private TEdge FindMinSum(TNode node, out TNode nextNode)
         {
             var arr = Graph.Edges.Where(e => e.Output.Equals(node)).ToArray();
 
@@ -51,12 +51,34 @@ namespace OptimalPath.Services
             int sum = minEdge.Weigth + minEdge.Input.Sum;
 
             for (int i = 1; i < arr.Length; i++)
-                if (sum > arr[i].Input.Sum + arr[i].Weigth)
+            {
+                int prevSum = arr[i].Input.Sum + arr[i].Weigth;
+                if (sum > prevSum)
                 {
                     sum = arr[i].Input.Sum + arr[i].Weigth;
                     minEdge = arr[i];
                 }
+            }
 
+            arr = Graph.Edges.Where(e => e.Input.Equals(node)).ToArray();
+
+            if (arr.Length == 0)
+            {
+                nextNode = minEdge.Input;
+                return minEdge;
+            }
+
+            for (int i = 0; i < arr.Length; i++)
+            {
+                int prevSum = arr[i].Output.Sum + arr[i].Weigth;
+                if (sum > prevSum)
+                {
+                    sum = arr[i].Output.Sum + arr[i].Weigth;
+                    minEdge = arr[i];
+                }
+            }
+
+            nextNode = minEdge.Output.Sum < minEdge.Input.Sum ? minEdge.Output : minEdge.Input;
             return minEdge;
         }
 

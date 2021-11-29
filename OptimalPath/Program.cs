@@ -1,6 +1,7 @@
 ﻿using OptimalPath.Models;
 using OptimalPath.Services;
 using System;
+using System.Linq;
 
 namespace OptimalPath
 {
@@ -36,7 +37,9 @@ namespace OptimalPath
                 Graph = gr
             };
 
-            Console.WriteLine(string.Join("; ", alg.ComputePath(a, g)));
+            var route = alg.ComputePath(a, g);
+
+            Console.WriteLine($"{string.Join("; ", route)}\n{route.Edges.Sum(e => e.Weigth)}\n{route.Destination.Sum}");
         }
     }
 }
